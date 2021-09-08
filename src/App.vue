@@ -1,12 +1,30 @@
 <script setup lang="ts">
-// This starter template is using Vue 3 <script setup> SFCs
-// Check out https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup
-import HelloWorld from './components/HelloWorld.vue'
+import '../dist/style.css'
+// 如果不忽略 npm run build 会报错：
+// @ts-ignore
+import { SyGrid, SyTable } from '../dist/sy-vue3.es.js'
+
+import { ref } from 'vue'
+
+
+const mainFieldList = ref([
+    {key: 'name', label: '姓名'}
+])
+
+const mainValue = ref({
+})
+
+const firstLineFieldList = ref([
+    {key: 'score', label: '分数'}
+])
+
+const firstLineValueList = ref([
+])
 </script>
 
 <template>
-  <img alt="Vue logo" src="./assets/logo.png" />
-  <HelloWorld msg="Hello Vue 3 + TypeScript + Vite" />
+    <SyGrid :fieldList="mainFieldList" v-model:dataValue="mainValue" ></SyGrid>
+    <SyTable :columnPropList="firstLineFieldList" v-model:tableDataList="firstLineValueList"></SyTable>
 </template>
 
 <style>

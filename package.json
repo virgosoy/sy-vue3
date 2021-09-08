@@ -1,19 +1,34 @@
 {
   "name": "sy-vue3",
-  "version": "0.0.0",
+  "version": "0.1.0-alpha.210908",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/sy-vue3.umd.js",
+  "module": "./dist/sy-vue3.es.js",
+  "exports": {
+    ".": {
+      "import": "./dist/sy-vue3.es.js",
+      "require": "./dist/sy-vue3.umd.js"
+    }
+  },
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
     "serve": "vite preview"
   },
   "dependencies": {
-    "vue": "^3.2.6"
+    "async-validator": "^3.5.2",
+    "bignumber.js": "^9.0.1",
+    "vue": "^3.2.10",
+    "xlsx": "^0.17.1"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^1.6.1",
-    "@vue/compiler-sfc": "^3.2.6",
+    "@vitejs/plugin-vue-jsx": "^1.1.8",
+    "@vue/compiler-sfc": "^3.2.10",
     "typescript": "^4.3.2",
-    "vite": "^2.5.4",
+    "vite": "^2.5.5",
     "vue-tsc": "^0.2.2"
   }
 }
