@@ -2,17 +2,18 @@
 // @ts-check
 
 /**
- * @version 1.15.2.210908    路径含有`@`的改为相对路径
+ * @version 1.15.3.210908   fix: 变量不存在
  * @changlog
- *      1.15.2.210908    路径含有`@`的改为相对路径
- *      1.15.1.210917    修改一个变量未使用
- *      1.15.0.210819    增加多行文本框类型`props.fieldList[].dataType==='textarea'`；grid row 最大高度改为自动
- *      1.14.0.210819    增加字段占据整行的设置`props.fieldList[].isFullRow`
- *      1.13.2.210811    fix: 当非字段列表里面的数据变动时会报错
- *      1.13.1.210810    如果 SelectList 开启了过滤，那么第一次点击也会显示全部选项
- *      1.13.0.210810    SySelectMenu 升级，增加过滤`props.fieldList[].selectOption.enableFilter`
- *      1.12.0.210806    增加下拉列表配置`props.fieldList[].selectOption`，可选择下拉列表数据刷新策略
- *      1.11.0.210729   ⚡breaked change：校验返回对象修改
+ *      1.15.3.210908   fix: 变量不存在
+ *      1.15.2.210908    🐞路径含有`@`的改为相对路径
+ *      1.15.1.210917    🐞修改一个变量未使用
+ *      1.15.0.210819    🐞增加多行文本框类型`props.fieldList[].dataType==='textarea'`；grid row 最大高度改为自动
+ *      1.14.0.210819    🐞增加字段占据整行的设置`props.fieldList[].isFullRow`
+ *      1.13.2.210811    🐞fix: 当非字段列表里面的数据变动时会报错
+ *      1.13.1.210810    🐞如果 SelectList 开启了过滤，那么第一次点击也会显示全部选项
+ *      1.13.0.210810    🐞SySelectMenu 升级，增加过滤`props.fieldList[].selectOption.enableFilter`
+ *      1.12.0.210806    🐞增加下拉列表配置`props.fieldList[].selectOption`，可选择下拉列表数据刷新策略
+ *      1.11.0.210729   🐞⚡breaked change：校验返回对象修改
  *      1.10.0.210712   SySelectDialog插件的修改导致的修改
  *      1.9.0.210712    增加数据类型`props.fieldList[].dataType==='selectDialog'`
  *      1.8.0.210712    增加数据类型`props.fieldList[].dataType==='pick'`，用于点击时使用外部组件使用，无法键盘输入值
@@ -309,7 +310,7 @@ export default defineComponent({
                     // 校验失败
                     const message = errors.map((e)=>e.message).join(',')
                     invalidMsgs.value[fieldKey] = message
-                    const label = realFieldList.value.find(f => f.key === key)?.label
+                    const label = realFieldList.value.find(f => f.key === fieldKey)?.label
                     throw /** @type {GridValidateResultError} */({[fieldKey] : {label, message}})
                 })
         }
