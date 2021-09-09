@@ -8,7 +8,8 @@ import { ref } from 'vue'
 const mainFieldList = ref([
     {key: 'name', label: '姓名'},
     {key: 'number', label: '数字校验', validRule: Rule.numberOptional()},
-    {key: 'cron', label: 'cron校验', validRule: Rule.cronOptional()}
+    {key: 'cron', label: 'cron校验', validRule: Rule.cronOptional()},
+    {key: 'javaClass', label: 'java类名校验', validRule: Rule.javaClassOptional()}
 ])
 
 const mainValue = ref({
@@ -41,8 +42,8 @@ async function validate(){
     }
 }
 
-// import { isCron } from '../lib/utils/sy-util/validate'
-// window.isCron = isCron
+// import { isJavaClass } from '../lib/utils/sy-util/validate'
+// window.isJavaClass = isJavaClass
 </script>
 
 <template>
