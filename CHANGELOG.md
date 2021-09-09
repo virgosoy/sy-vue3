@@ -1,9 +1,15 @@
 
+## 0.1.3-alpha.210909 (2021-09-09)
+
+### Features
+
+新增工具类 `Rule`（valid-rule.js），用于快速校验。
+
 ## 0.1.2-alpha.210909 (2021-09-09)
 
 ### Features
 
-SyTable v1.5.0.210909    feat:新增插槽`operation`，对操作列进行修改
+`SyTable` v1.5.0.210909    feat:新增插槽`operation`，对操作列进行修改
 
 使用 eslint 对 lib/** 进行检测
 
@@ -18,3 +24,5 @@ SyTable v1.5.0.210909    feat:新增插槽`operation`，对操作列进行修改
 ### Features
 
 单独抽取成插件进行打包
+
+支持 `SyGrid`、`SyTable`
