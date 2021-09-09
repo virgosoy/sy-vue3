@@ -2,8 +2,9 @@
 // @ts-check
 
 /**
- * @version 1.4.1.210908    路径含有`@`的改为相对路径
+ * @version 1.5.0.210909    feat:新增插槽`operation`，对操作列进行修改
  * @changelog
+ *          1.5.0.210909    feat:新增插槽`operation`，对操作列进行修改
  *          1.4.1.210908    路径含有`@`的改为相对路径
  *          1.4.0.210816    千分位文本输入框配置项`props.columnPropList[].currencyOption`
  *          1.3.0.210812    千分位文本输入框`props.columnPropList[].dataType='currency'`
@@ -156,6 +157,12 @@
                 value - 单元格的值
                 rowData - 对应的行数据
                 isReadonly - 单元格是否只读
+        插槽属性有 `operation`
+            指定操作列的显示
+            值为 {rowIndexOfShow, rowData, isReadonlyOfRow}:
+                rowIndexOfShow - 显示的行索引
+                rowData - 对应的行数据
+                isReadonlyOfRow - 行是否只读
  */
 // FIXME: 设置最大高度时excel粘贴超过高度会报错
 import { computed, ref, reactive, watchEffect, watch, defineComponent } from 'vue'
@@ -562,8 +569,8 @@ export default defineComponent({
         // 重新计算只读行
         watchEffect(()=>{
             tableDataShow.value.forEach((rowData, rowIndexOfShow)=>{
-                const isRowReadonly = innerSetting.value.readonlyRowHandler({rowData, rowIndexOfShow})
-                attachDatasOfRow.value[rowData._syRowId].isReadonly = isRowReadonly
+                const isReadonlyOfRow = innerSetting.value.readonlyRowHandler({rowData, rowIndexOfShow})
+                attachDatasOfRow.value[rowData._syRowId].isReadonly = isReadonlyOfRow
             })
         })
         
@@ -1077,6 +1084,7 @@ export default defineComponent({
                                     </div>
                                 </th>
                             ))}
+                            {/* 操作列 */}
                             <th class="sy-table__header-cell">
                                 <div class="sy-table__hcell-box"
                                     style={{width:innerSetting.value.opWidth}}>
@@ -1186,12 +1194,23 @@ export default defineComponent({
                                         </div>
                                     </td>
                                 ))}
+                                {/* 操作列 */}
                                 <td class="sy-table__body-cell"
                                     style={{width:innerSetting.value.opWidth}}>
                                     <div class="sy-table__cell-box">
-                                        {/*权限按严格的不可删除来*/
-                                        innerSetting.value.canRemoveRow && attachDatasOfRow.value[rowData._syRowId].canDelete ?
-                                            <button class="sy-table--btn sy-table--btn-danger" onClick={() => removeRow(rowIndexOfShow)}>删除</button> : ''}
+                                        { context.slots.operation?.({
+                                                rowIndexOfShow, 
+                                                rowData, 
+                                                isReadonlyOfRow : attachDatasOfRow.value[rowData._syRowId].isReadonly
+                                                }) // 操作列插槽
+                                            ?? 
+                                                // 默认插槽
+                                                (
+                                                /*权限按严格的不可删除来*/
+                                                innerSetting.value.canRemoveRow && attachDatasOfRow.value[rowData._syRowId].canDelete ?
+                                                    <button class="sy-table--btn sy-table--btn-danger" onClick={() => removeRow(rowIndexOfShow)}>删除</button> : ''
+                                                )
+                                        }
                                     </div>
                                 </td>
                             </tr>))}

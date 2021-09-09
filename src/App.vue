@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import '../dist/style.css'
-// 如果不忽略 npm run build 会报错：
-// @ts-ignore
-import { SyGrid, SyTable } from '../dist/sy-vue3.es.js'
+import { SyGrid, SyTable } from '../lib/main'
 
 import { ref } from 'vue'
 
@@ -20,20 +18,41 @@ const firstLineFieldList = ref([
 
 const firstLineValueList = ref([
 ])
+
+const secondLineFieldList = ref([
+    {key: 'score', label: '分数'}
+])
+
+const secondLineValueList = ref([
+])
+
+const secondLineSetting = {
+    opWidth: '1000px'
+}
 </script>
 
 <template>
     <SyGrid :fieldList="mainFieldList" v-model:dataValue="mainValue" ></SyGrid>
     <SyTable :columnPropList="firstLineFieldList" v-model:tableDataList="firstLineValueList"></SyTable>
+    <SyTable :columnPropList="secondLineFieldList" 
+            v-model:tableDataList="secondLineValueList"
+            :setting="secondLineSetting">
+        <template v-slot:operation="{rowIndexOfShow, rowData, isReadonlyOfRow}">
+            <span>{{ JSON.stringify({rowIndexOfShow, rowData, isReadonlyOfRow}) }}</span>
+            <button>暂停</button>
+            <button>恢复</button>
+            <button>删除</button>
+        </template>
+    </SyTable>
 </template>
 
 <style>
-#app {
+/* #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
-}
+} */
 </style>
