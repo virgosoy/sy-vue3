@@ -13,6 +13,7 @@ Since TypeScript cannot handle type information for `.vue` imports, they are shi
 # TODO-LIST WITH PROJECT
 
 - [ ] eslint support ts
+- [ ] refactor valid-rule.js similar code
 
 # How to Start
 
