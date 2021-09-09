@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import '../dist/style.css'
-import { SyGrid, SyTable } from '../lib/main'
+import { SyGrid, SyTable, Rule } from '../lib/main'
 
 import { ref } from 'vue'
 
 
 const mainFieldList = ref([
-    {key: 'name', label: '姓名'}
+    {key: 'name', label: '姓名'},
+    {key: 'number', label: '数字校验', validRule: Rule.numberOptional()},
+    {key: 'cron', label: 'cron校验', validRule: Rule.cronOptional()}
 ])
 
 const mainValue = ref({
@@ -29,10 +31,23 @@ const secondLineValueList = ref([
 const secondLineSetting = {
     opWidth: '1000px'
 }
+const mainGrid = ref()
+async function validate(){
+    try {
+        await mainGrid.value.validate()
+        console.log('校验无错误')
+    } catch(e) {
+        console.log(e)
+    }
+}
+
+// import { isCron } from '../lib/utils/sy-util/validate'
+// window.isCron = isCron
 </script>
 
 <template>
-    <SyGrid :fieldList="mainFieldList" v-model:dataValue="mainValue" ></SyGrid>
+    <SyGrid ref="mainGrid" :fieldList="mainFieldList" v-model:dataValue="mainValue" ></SyGrid>
+    <button @click="validate">校验SyGrid</button>
     <SyTable :columnPropList="firstLineFieldList" v-model:tableDataList="firstLineValueList"></SyTable>
     <SyTable :columnPropList="secondLineFieldList" 
             v-model:tableDataList="secondLineValueList"
