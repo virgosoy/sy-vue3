@@ -13,3 +13,11 @@ Since TypeScript cannot handle type information for `.vue` imports, they are shi
 # TODO-LIST WITH PROJECT
 
 - [ ] eslint support ts
+
+# How to Start
+
+execute `npm run build` to build in `/dist`.
+
+copy `*.css` , `*.es.js` and `*.es.js.map` in `/dist` to other project when you want use.
+
+import `*.css` and something from `*.es.js` when you use in other project.
