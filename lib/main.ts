@@ -5,6 +5,7 @@ import SyTable from './components/SyTable.vue'
 export * as CompUtils from './utils/sy-comp-utils'
 // 工具类
 import Rule from './utils/valid-rule.js'
+import UI from './utils/ui'
 export * from './utils/sy-util/basetype'
 
 export {
@@ -12,5 +13,6 @@ export {
     SyGrid,
     SyTable,
     // 工具类
-    Rule
+    Rule,
+    UI
 }
