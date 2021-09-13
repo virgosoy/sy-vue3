@@ -2,7 +2,7 @@
 import SyGrid from './components/SyGrid.vue'
 import SyTable from './components/SyTable.vue'
 // 组件相关工具类
-export * as CompUtils from './utils/sy-comp-utils'
+export * as SyCompUtils from './utils/sy-comp-utils'
 // 工具类
 import Rule from './utils/valid-rule.js'
 import UI from './utils/ui'
