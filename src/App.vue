@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // import '../dist/style.css'
-import { SyGrid, SyTable, Rule, CompUtils } from '../lib/main'
+import { SyGrid, SyTable, Rule, SyCompUtils } from '../lib/main'
 
 import { ref } from 'vue'
 
@@ -39,7 +39,7 @@ async function validate(){
         console.log('校验无错误')
     } catch(e) {
         console.log(e)
-        const format = CompUtils.formatInvalidMessage([e])
+        const format = SyCompUtils.formatInvalidMessage([e])
         console.log(format)
     }
 }
