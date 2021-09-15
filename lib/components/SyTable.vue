@@ -173,6 +173,7 @@ import SySelectMenu from './SySelectMenu.vue'
 import SyInputPercent from './SyInputPercent.vue'
 import SyInputCurrency from './SyInputCurrency.vue'
 export default defineComponent({
+    name: 'SyTable',
     props: {
         /**
          * @typedef {Object} CurrencyOption 千分位文本输入框配置项

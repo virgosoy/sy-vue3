@@ -9,7 +9,8 @@ const mainFieldList = ref([
     {key: 'name', label: '姓名'},
     {key: 'number', label: '数字校验', validRule: Rule.numberOptional()},
     {key: 'cron', label: 'cron校验', validRule: Rule.cronOptional()},
-    {key: 'javaClass', label: 'java类名校验', validRule: Rule.javaClassOptional()}
+    {key: 'javaClass', label: 'java类名校验', validRule: Rule.javaClassOptional()},
+    {key: 'textarea', label: '文本域', dataType: 'textarea'},
 ])
 
 const mainValue = ref({

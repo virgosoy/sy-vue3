@@ -80,6 +80,7 @@ import SySelectMenu from './SySelectMenu.vue'
 import SyDatePicker from './SyDatePicker.vue'
 import SySelectDialog from './SySelectDialog.vue'
 export default defineComponent({
+    name: 'SyGrid',
     props:{
         /**
          * @typedef {Object} PropOfSelectDialog 选择对话框相关设置
