@@ -11,6 +11,8 @@ const mainFieldList = ref([
     {key: 'cron', label: 'cron校验', validRule: Rule.cronOptional()},
     {key: 'javaClass', label: 'java类名校验', validRule: Rule.javaClassOptional()},
     {key: 'textarea', label: '文本域', dataType: 'textarea'},
+    {key: 'jsonObject', label: 'jsonObject', dataType: 'jsonObject'},
+    {key: 'end', label: '最后一个框'},
 ])
 
 const mainValue = ref({
@@ -44,7 +46,10 @@ async function validate(){
         console.log(format)
     }
 }
-
+function submit(){
+    const data = mainGrid.value.getSubmitData()
+    console.log(data)
+}
 // import { isJavaClass } from '../lib/utils/sy-util/validate'
 // window.isJavaClass = isJavaClass
 </script>
@@ -52,6 +57,7 @@ async function validate(){
 <template>
     <SyGrid ref="mainGrid" :fieldList="mainFieldList" v-model:dataValue="mainValue" ></SyGrid>
     <button @click="validate">校验SyGrid</button>
+    <button @click="submit">提交SyGrid</button>
     <SyTable :columnPropList="firstLineFieldList" v-model:tableDataList="firstLineValueList"></SyTable>
     <SyTable :columnPropList="secondLineFieldList" 
             v-model:tableDataList="secondLineValueList"

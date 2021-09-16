@@ -2,8 +2,9 @@
 // @ts-check
 
 /**
- * @version 1.15.3.210908   fix: 变量不存在
+ * @version 1.16.0.210916   增加数据类型`props.fieldList[].dataType==='jsonObject'`，获取提交数据时为json对象，含有默认校验
  * @changlog
+ *      1.16.0.210916   增加数据类型`props.fieldList[].dataType==='jsonObject'`，获取提交数据时为json对象，含有默认校验
  *      1.15.3.210908   fix: 变量不存在
  *      1.15.2.210908    🐞路径含有`@`的改为相对路径
  *      1.15.1.210917    🐞修改一个变量未使用
@@ -102,7 +103,7 @@ export default defineComponent({
          * @typedef {Object} FieldProp 字段属性
          * @property {string} key 字段
          * @property {string} label 字段显示名
-         * @property {'text' | 'fixed' | 'select' | 'selectDialog' | 'date' | 'pick' | 'textarea'} dataType 数据类型
+         * @property {'text' | 'fixed' | 'select' | 'selectDialog' | 'date' | 'pick' | 'textarea' | 'jsonObject'} dataType 数据类型
          *      - text 字符串
          *      - fixed 只读固定
          *      - select 下拉选择
@@ -110,6 +111,7 @@ export default defineComponent({
          *      - date 日期
          *      - pick 通过外部选择来修改值，值不可直接通过键盘输入，需通过事件（onClick）来进行修改。
          *      - textarea 多行文本框
+         *      - jsonObject json对象，输入框为多行文本框，获取提交数据为json对象，内部保存的还是字符串。
          * @property {function} validRule 校验规则，自动封装字段后传入 AsyncValidator
          * @property {boolean} isShow 是否显示数据
          * @property {boolean} isSend 是否发送数据给后端
@@ -194,8 +196,20 @@ export default defineComponent({
                             isRequired: false,
                             isFullRow: false,
                         }, 
-                        /* 影响默认值的属性 （false/true 会被拼接忽略）*/
-                        item.dataType === 'textarea' && { isFullRow: true},
+                        /* 影响默认值的属性 （Object.assign 实参为 false/true 时会被拼接忽略）*/
+                        (item.dataType === 'textarea' || item.dataType === 'jsonObject') && { isFullRow: true},
+                        // jsonObject类型时增加默认校验，值可否转为json对象，避免没校验但调用获取提交数据时报错
+                        // @ts-ignore
+                        item.dataType === 'jsonObject' && {validRule: (rule, value, callback, source, options) => {
+                            var errors = []
+                            try{
+                                JSON.parse(value)
+                            }catch(e){
+                                errors.push(e)
+                            }finally{
+                                callback(errors)
+                            }
+                        }},
                         /* 设置值 */
                         item)
 
@@ -345,14 +359,23 @@ export default defineComponent({
         //#region 获取提交数据
 
         /**
+         * 获取提交数据前的钩子列表，直接 push 钩子即可\
+         * 钩子参数：value - 原值, fieldProp - 字段属性；返回值：新值。
+         * @type {Array<(value: any, fieldProp: FieldProp) => any>}
+         */
+        const getSubmitDataPreHooks = []
+
+        /**
          * 获取要提交的数据\
          * 以字段属性为准
          * @returns {Record<string, string>}
          * @public
          */
         function getSubmitData(){
-            return realFieldList.value.filter(f => f.isSend).map(f => f.key).reduce((obj, key)=>{
-                obj[key] = innerDataValue.value[key] ?? ''
+            return realFieldList.value.filter(f => f.isSend).reduce((obj, f)=>{
+                const key = f.key
+                const value = getSubmitDataPreHooks.reduce((value, hook) => hook(value, f), innerDataValue.value[key])
+                obj[key] = value ?? ''
                 return obj
             },/** @type {Record<string, string>} */({}))
         }
@@ -532,6 +555,10 @@ export default defineComponent({
         addAttachDataInitHook((v)=>v.activeOfSelectDialog = false)
         //#endregion
 
+        //#region jsonObject 类型处理
+        getSubmitDataPreHooks.push((value, fieldProp) => fieldProp.dataType === 'jsonObject' ? JSON.parse(value) : value)
+        //#endregion
+
         // 给外部调用
         context.expose({
             validate,
@@ -629,7 +656,7 @@ export default defineComponent({
                                                 return <>
                                                         <div class="sy-grid__field-input-box">
                                                             {(f.dataType === 'pick' || f.dataType === 'selectDialog') ? pickIpt : 
-                                                                f.dataType === 'textarea' ? textareaVNode : ipt}
+                                                                (f.dataType === 'textarea' || f.dataType === 'jsonObject') ? textareaVNode : ipt}
                                                             {f.dataType === 'select' ? caret : ''}
                                                         </div>
                                                         {f.dataType === 'select' ? selectMenu : ''}
