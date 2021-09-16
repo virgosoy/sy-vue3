@@ -1,3 +1,10 @@
+
+## 0.1.10-alpha.210916 (2021-09-16)
+
+### Features
+
+`SyGrid` v1.16.0.210916   增加数据类型`props.fieldList[].dataType==='jsonObject'`，获取提交数据时为json对象，含有默认校验
+
 ## 0.1.9-alpha.210915 (2021-09-15)
 
 ### Bug Fixes
