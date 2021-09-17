@@ -2,31 +2,32 @@
 // @ts-check
 
 /**
- * @version 1.16.0.210916   增加数据类型`props.fieldList[].dataType==='jsonObject'`，获取提交数据时为json对象，含有默认校验
+ * @version 1.16.1.210917   fix: jsonObject 类型不输入时会报错。现在不输入会返回 null。
  * @changlog
- *      1.16.0.210916   增加数据类型`props.fieldList[].dataType==='jsonObject'`，获取提交数据时为json对象，含有默认校验
- *      1.15.3.210908   fix: 变量不存在
- *      1.15.2.210908    🐞路径含有`@`的改为相对路径
- *      1.15.1.210917    🐞修改一个变量未使用
- *      1.15.0.210819    🐞增加多行文本框类型`props.fieldList[].dataType==='textarea'`；grid row 最大高度改为自动
- *      1.14.0.210819    🐞增加字段占据整行的设置`props.fieldList[].isFullRow`
- *      1.13.2.210811    🐞fix: 当非字段列表里面的数据变动时会报错
- *      1.13.1.210810    🐞如果 SelectList 开启了过滤，那么第一次点击也会显示全部选项
- *      1.13.0.210810    🐞SySelectMenu 升级，增加过滤`props.fieldList[].selectOption.enableFilter`
- *      1.12.0.210806    🐞增加下拉列表配置`props.fieldList[].selectOption`，可选择下拉列表数据刷新策略
- *      1.11.0.210729   🐞⚡breaked change：校验返回对象修改
- *      1.10.0.210712   SySelectDialog插件的修改导致的修改
- *      1.9.0.210712    增加数据类型`props.fieldList[].dataType==='selectDialog'`
- *      1.8.0.210712    增加数据类型`props.fieldList[].dataType==='pick'`，用于点击时使用外部组件使用，无法键盘输入值
- *      1.7.0.210604    增加只读模式`props.setting.isReadMode`
- *      1.6.0.210602    fix: label触发文本框click导致选择日期插件后不会隐藏
- *      1.5.1.210602    增加附加属性初始化钩子、修正日期可隐藏
- *      1.5.0-alpha.210601 增加日期类型
- *      1.4.1.210530    下拉列表最小宽度改为160px，与输入框对齐
- *      1.4.0.210528    下拉类型增加下拉图标
- *      1.3.0.210527    隐藏字段
- *      1.2.0.210527    增加插槽
- *      1.1.0.210527    增加下拉列表
+ *          1.16.1.210917   fix: jsonObject 类型不输入时会报错。现在不输入会返回 null。
+ *          1.16.0.210916   🐞增加数据类型`props.fieldList[].dataType==='jsonObject'`，获取提交数据时为json对象，含有默认校验
+ *          1.15.3.210908   fix: 变量不存在
+ *          1.15.2.210908   🐞路径含有`@`的改为相对路径
+ *          1.15.1.210917   🐞修改一个变量未使用
+ *          1.15.0.210819   🐞增加多行文本框类型`props.fieldList[].dataType==='textarea'`；grid row 最大高度改为自动
+ *          1.14.0.210819   🐞增加字段占据整行的设置`props.fieldList[].isFullRow`
+ *          1.13.2.210811   🐞fix: 当非字段列表里面的数据变动时会报错
+ *          1.13.1.210810   🐞如果 SelectList 开启了过滤，那么第一次点击也会显示全部选项
+ *          1.13.0.210810   🐞SySelectMenu 升级，增加过滤`props.fieldList[].selectOption.enableFilter`
+ *          1.12.0.210806   🐞增加下拉列表配置`props.fieldList[].selectOption`，可选择下拉列表数据刷新策略
+ *          1.11.0.210729   🐞⚡breaked change：校验返回对象修改
+ *          1.10.0.210712   SySelectDialog插件的修改导致的修改
+ *          1.9.0.210712    增加数据类型`props.fieldList[].dataType==='selectDialog'`
+ *          1.8.0.210712    增加数据类型`props.fieldList[].dataType==='pick'`，用于点击时使用外部组件使用，无法键盘输入值
+ *          1.7.0.210604    增加只读模式`props.setting.isReadMode`
+ *          1.6.0.210602    fix: label触发文本框click导致选择日期插件后不会隐藏
+ *          1.5.1.210602    增加附加属性初始化钩子、修正日期可隐藏
+ *          1.5.0-alpha.210601 增加日期类型
+ *          1.4.1.210530    下拉列表最小宽度改为160px，与输入框对齐
+ *          1.4.0.210528    下拉类型增加下拉图标
+ *          1.3.0.210527    隐藏字段
+ *          1.2.0.210527    增加插槽
+ *          1.1.0.210527    增加下拉列表
  * @dependOn
  *      vue
  *      async-validator
@@ -76,7 +77,7 @@
  */
 import { computed, ref, toRefs, watchEffect, defineComponent, watch } from 'vue'
 import AsyncValidator from 'async-validator'
-import { isUndefined } from '../utils/sy-util/basetype'
+import { isUndefined, isEmptyAsString } from '../utils/sy-util/basetype'
 import SySelectMenu from './SySelectMenu.vue'
 import SyDatePicker from './SyDatePicker.vue'
 import SySelectDialog from './SySelectDialog.vue'
@@ -111,7 +112,7 @@ export default defineComponent({
          *      - date 日期
          *      - pick 通过外部选择来修改值，值不可直接通过键盘输入，需通过事件（onClick）来进行修改。
          *      - textarea 多行文本框
-         *      - jsonObject json对象，输入框为多行文本框，获取提交数据为json对象，内部保存的还是字符串。
+         *      - jsonObject json对象。输入框为多行文本框；获取提交数据为json对象，不输入会返回null；内部保存的还是字符串。
          * @property {function} validRule 校验规则，自动封装字段后传入 AsyncValidator
          * @property {boolean} isShow 是否显示数据
          * @property {boolean} isSend 是否发送数据给后端
@@ -203,7 +204,8 @@ export default defineComponent({
                         item.dataType === 'jsonObject' && {validRule: (rule, value, callback, source, options) => {
                             var errors = []
                             try{
-                                JSON.parse(value)
+                                // 空字符串不报错，即允许为空
+                                isEmptyAsString(value) || JSON.parse(value)
                             }catch(e){
                                 errors.push(e)
                             }finally{
@@ -374,8 +376,8 @@ export default defineComponent({
         function getSubmitData(){
             return realFieldList.value.filter(f => f.isSend).reduce((obj, f)=>{
                 const key = f.key
-                const value = getSubmitDataPreHooks.reduce((value, hook) => hook(value, f), innerDataValue.value[key])
-                obj[key] = value ?? ''
+                const value = getSubmitDataPreHooks.reduce((value, hook) => hook(value, f), innerDataValue.value[key] ?? '')
+                obj[key] = value
                 return obj
             },/** @type {Record<string, string>} */({}))
         }
@@ -556,7 +558,8 @@ export default defineComponent({
         //#endregion
 
         //#region jsonObject 类型处理
-        getSubmitDataPreHooks.push((value, fieldProp) => fieldProp.dataType === 'jsonObject' ? JSON.parse(value) : value)
+        getSubmitDataPreHooks.push((value, fieldProp) => fieldProp.dataType !== 'jsonObject' ? value : 
+                isEmptyAsString(value) ? null : JSON.parse(value))
         //#endregion
 
         // 给外部调用
