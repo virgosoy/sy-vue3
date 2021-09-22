@@ -1,3 +1,9 @@
+## 0.1.12-alpha.210922 (2021-09-22)
+
+### Bug Fixes
+
+`SyTable` v1.5.1.210922    fix: 粘贴新增行失效（this变成undefined，猜测可能是升级vue之后不支持了）
+
 ## 0.1.11-alpha.210917 (2021-09-17)
 
 ### Bug Fixes

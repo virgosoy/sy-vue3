@@ -2,8 +2,9 @@
 // @ts-check
 
 /**
- * @version 1.5.0.210909    feat:新增插槽`operation`，对操作列进行修改
+ * @version 1.5.1.210922    fix: 粘贴新增行失效（this变成undefined，猜测可能是升级vue之后不支持了）
  * @changelog
+ *          1.5.1.210922    fix: 粘贴新增行失效（this变成undefined，猜测可能是升级vue之后不支持了）
  *          1.5.0.210909    feat:新增插槽`operation`，对操作列进行修改
  *          1.4.1.210908    路径含有`@`的改为相对路径
  *          1.4.0.210816    千分位文本输入框配置项`props.columnPropList[].currencyOption`
@@ -22,7 +23,7 @@
  *          1.0.1.210601    使用defineComponent
  *          1.0.0.210601
  * @depentOn
- *      vue
+ *      vue ^3.2.10
  *      SyInputPercent ^0.1.0
  *      SyInputCurrency ^0.2.1
  * @doc
@@ -685,7 +686,7 @@ export default defineComponent({
                         //     break
                         // }
                         // @ts-ignore
-                        this.addRow(currentRowIndex)
+                        addRow(currentRowIndex)
                     }
                     for(let c = 0; c < aoaRow.length; c++){
                         let currentColumnIndex = pasteColumnIndex + c
@@ -705,7 +706,6 @@ export default defineComponent({
                         // @ts-ignore
                         currentRowData[currentColumnKey] = cellValue
                         // 触发校验
-                        // validateAndEmit(this,this.tableDatas[currentRowIndex],currentRowIndex,currentColumnKey)
                         validateOneCellAndEmit({rowIndexOfShow: currentRowIndex, columnKey: currentColumnKey})
                     }
                 }
