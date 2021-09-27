@@ -53,7 +53,10 @@ const mainFieldList = ref([
         }
     },
     {key: 'submitDataPreHandler', label: '提交前处理', 
-        submitDataPreHandler: (v : string) => v.length === 0 ? null : v
+        submitDataPreHandler: (v : string) => v.length === 0 ? null : v,
+    },
+    {key: 'isSubmitNullWhenEmpty', label: '空值为null', 
+        isSubmitNullWhenEmpty: true,
     },
     {key: 'end', label: '最后一个框'},
 ])

@@ -3,6 +3,7 @@
 
 /**
  * @version 1.17.0.doing   feat: 字段属性 `props.fieldList[].submitDataPreHandler` 获取提交数据前对值进行处理的函数，为 @beta 版本。
+ *                          字段属性 `props.fieldList[].isSubmitNullWhenEmpty` 当值为空时是否提交null值
  * @changlog
  *          1.16.1.210917   fix: jsonObject 类型不输入时会报错。现在不输入会返回 null。
  *          1.16.0.210916   🐞增加数据类型`props.fieldList[].dataType==='jsonObject'`，获取提交数据时为json对象，含有默认校验
@@ -124,8 +125,10 @@ export default defineComponent({
          * @property {(e : Event, {key} : {key :string}) => void} onClick dataType==='pick' 时有效，表示点击输入框时的事件处理
          * @property {PropOfSelectDialog} selectDialog 选择对话框相关设置
          * @property {boolean} isFullRow 可选，是否占据整行，默认值：false，如果 dataType==='textarea'，则默认为true
+         * @property {boolean} isSubmitNullWhenEmpty 可选，当值为空时是否提交null值，而非空字符串。默认为false，空字符串。
+         *      isSubmitNullWhenEmpty 为 true 并且值为空时，submitDataPreHandler 不生效
          * @property {(value : any) => any} submitDataPreHandler @beta可选，获取提交数据前对值进行处理的函数，参数 value 为原值，返回值为新值。默认不处理
-         * 
+         *      isSubmitNullWhenEmpty 为 true 并且值为空时，submitDataPreHandler 不生效
          * @property {string} _inputType 内置，input 的 type 值
          */
         /**
@@ -201,6 +204,7 @@ export default defineComponent({
                             isSend: true, 
                             isRequired: false,
                             isFullRow: false,
+                            isSubmitNullWhenEmpty: false,
                             submitDataPreHandler: (v) => v,
                         }),
                         /* 影响默认值的属性 （Object.assign 实参为 false/true 时会被拼接忽略）*/
@@ -382,8 +386,13 @@ export default defineComponent({
         function getSubmitData(){
             return realFieldList.value.filter(f => f.isSend).reduce((obj, f)=>{
                 const key = f.key
-                const valueOfPreFieldDeal = getSubmitDataPreHooks.reduce((value, hook) => hook(value, f), innerDataValue.value[key] ?? '')
-                const value = f.submitDataPreHandler(valueOfPreFieldDeal)
+                let value = getSubmitDataPreHooks.reduce((value, hook) => hook(value, f), innerDataValue.value[key] ?? '')
+                // isSubmitNullWhenEmpty 为 true 并且值为空时，submitDataPreHandler 不生效
+                if(f.isSubmitNullWhenEmpty && isEmptyAsString(value)){
+                    value = null
+                }else{
+                    value = f.submitDataPreHandler(value)
+                }
                 obj[key] = value
                 return obj
             },/** @type {Record<string, string>} */({}))
