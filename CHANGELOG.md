@@ -1,3 +1,11 @@
+## 0.1.13-alpha.210927 (2021-09-27)
+
+### Features
+
+`SyGrid` v1.17.0.210927   
+feat: 字段属性 `props.fieldList[].submitDataPreHandler` 获取提交数据前对值进行处理的函数，为 @beta 版本。
+feat: 字段属性 `props.fieldList[].isSubmitNullWhenEmpty` 当值为空时是否提交null值
+
 ## 0.1.12-alpha.210922 (2021-09-22)
 
 ### Bug Fixes
