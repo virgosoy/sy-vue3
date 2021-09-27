@@ -2,9 +2,11 @@
 // @ts-check
 
 /**
- * @version 1.17.0.doing   feat: 字段属性 `props.fieldList[].submitDataPreHandler` 获取提交数据前对值进行处理的函数，为 @beta 版本。
+ * @version 1.17.0.210927   feat: 字段属性 `props.fieldList[].submitDataPreHandler` 获取提交数据前对值进行处理的函数，为 @beta 版本。
  *                          字段属性 `props.fieldList[].isSubmitNullWhenEmpty` 当值为空时是否提交null值
  * @changlog
+ *          1.17.0.210927   feat: 字段属性 `props.fieldList[].submitDataPreHandler` 获取提交数据前对值进行处理的函数，为 @beta 版本。
+ *                          字段属性 `props.fieldList[].isSubmitNullWhenEmpty` 当值为空时是否提交null值
  *          1.16.1.210917   fix: jsonObject 类型不输入时会报错。现在不输入会返回 null。
  *          1.16.0.210916   🐞增加数据类型`props.fieldList[].dataType==='jsonObject'`，获取提交数据时为json对象，含有默认校验
  *          1.15.3.210908   fix: 变量不存在
@@ -126,6 +128,7 @@ export default defineComponent({
          * @property {PropOfSelectDialog} selectDialog 选择对话框相关设置
          * @property {boolean} isFullRow 可选，是否占据整行，默认值：false，如果 dataType==='textarea'，则默认为true
          * @property {boolean} isSubmitNullWhenEmpty 可选，当值为空时是否提交null值，而非空字符串。默认为false，空字符串。
+         *      此选项对 dataType === 'jsonObject' 无效，因为这个类型默认空就是返回 null
          *      isSubmitNullWhenEmpty 为 true 并且值为空时，submitDataPreHandler 不生效
          * @property {(value : any) => any} submitDataPreHandler @beta可选，获取提交数据前对值进行处理的函数，参数 value 为原值，返回值为新值。默认不处理
          *      isSubmitNullWhenEmpty 为 true 并且值为空时，submitDataPreHandler 不生效
@@ -574,6 +577,7 @@ export default defineComponent({
         //#endregion
 
         //#region jsonObject 类型处理
+        // 其实这个可以用字段属性 isSubmitNullWhenEmpty + submitDataPreHandler 默认处理，但是这个的出现比后者出现得早，懒得改了。
         getSubmitDataPreHooks.push((value, fieldProp) => fieldProp.dataType !== 'jsonObject' ? value : 
                 isEmptyAsString(value) ? null : JSON.parse(value))
         //#endregion
