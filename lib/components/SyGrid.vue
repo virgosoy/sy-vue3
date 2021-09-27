@@ -2,7 +2,7 @@
 // @ts-check
 
 /**
- * @version 1.16.1.210917   fix: jsonObject 类型不输入时会报错。现在不输入会返回 null。
+ * @version 1.17.0.doing   feat: 字段属性 `props.fieldList[].submitDataPreHandler` 获取提交数据前对值进行处理的函数，为 @beta 版本。
  * @changlog
  *          1.16.1.210917   fix: jsonObject 类型不输入时会报错。现在不输入会返回 null。
  *          1.16.0.210916   🐞增加数据类型`props.fieldList[].dataType==='jsonObject'`，获取提交数据时为json对象，含有默认校验
@@ -52,6 +52,8 @@
         - [x] isRequired 是否必填（样式显示，不做校验）
         - [x] selectList 下拉列表数据异步函数
             - [ ] 优化响应式触发，目前只要一个改了就会全部触发
+        - 默认值
+            - 不需要此配置项，传入数据直接给默认值即可
     - 数据校验
         - [x] 单个输入框触发事件（sy-invalid）
         - [x] 手动调用（不触发事件）
@@ -94,7 +96,7 @@ export default defineComponent({
         /**
          * @typedef {Object} PropOfSelect 选择下拉框相关设置
          * @property {SelectListGenerator} selectList 下拉列表数据异步函数
-         * @property {'watchEffect' | 'drop' | 'once'} refreshStrategy 刷新策略
+         * @property {'watchEffect' | 'drop' | 'once'} refreshStrategy 刷新策略（此对象中必须，就是说如果配置了此对象，那么需要有这个值）
          *      - watchEffect 默认，使用 vue 的 watchEffect 触发
          *      - drop 下拉时触发
          *      - once 只触发一次，在加载时触发
@@ -117,11 +119,12 @@ export default defineComponent({
          * @property {boolean} isShow 是否显示数据
          * @property {boolean} isSend 是否发送数据给后端
          * @property {boolean} isRequired 是否必填（样式显示，不做校验）
-         * @property {SelectListGenerator} selectList 下拉列表数据异步函数
+         * @property {SelectListGenerator} selectList 下拉列表数据异步函数。建议使用 selectOption.selectList 代替。
          * @property {?PropOfSelect} selectOption 下拉列表配置，可选
          * @property {(e : Event, {key} : {key :string}) => void} onClick dataType==='pick' 时有效，表示点击输入框时的事件处理
          * @property {PropOfSelectDialog} selectDialog 选择对话框相关设置
          * @property {boolean} isFullRow 可选，是否占据整行，默认值：false，如果 dataType==='textarea'，则默认为true
+         * @property {(value : any) => any} submitDataPreHandler @beta可选，获取提交数据前对值进行处理的函数，参数 value 为原值，返回值为新值。默认不处理
          * 
          * @property {string} _inputType 内置，input 的 type 值
          */
@@ -173,10 +176,11 @@ export default defineComponent({
          const realSetting = computed(() => {
             const result = Object.assign({},
                     /* 默认值 */
-                    {
+                    /** @type {Setting} */
+                    ({
                         isDefaultEmptyStringOfValue: true,
                         isReadMode: false,
-                    },
+                    }),
                     setting?.value
             )
             return result
@@ -190,13 +194,15 @@ export default defineComponent({
             return fieldList.value.map(item => {
                 const result = Object.assign({}, 
                         /* 默认值 */
-                        {
+                        /** @type {FieldProp} */
+                        ({
                             dataType: 'text', 
                             isShow: true, 
                             isSend: true, 
                             isRequired: false,
                             isFullRow: false,
-                        }, 
+                            submitDataPreHandler: (v) => v,
+                        }),
                         /* 影响默认值的属性 （Object.assign 实参为 false/true 时会被拼接忽略）*/
                         (item.dataType === 'textarea' || item.dataType === 'jsonObject') && { isFullRow: true},
                         // jsonObject类型时增加默认校验，值可否转为json对象，避免没校验但调用获取提交数据时报错
@@ -376,7 +382,8 @@ export default defineComponent({
         function getSubmitData(){
             return realFieldList.value.filter(f => f.isSend).reduce((obj, f)=>{
                 const key = f.key
-                const value = getSubmitDataPreHooks.reduce((value, hook) => hook(value, f), innerDataValue.value[key] ?? '')
+                const valueOfPreFieldDeal = getSubmitDataPreHooks.reduce((value, hook) => hook(value, f), innerDataValue.value[key] ?? '')
+                const value = f.submitDataPreHandler(valueOfPreFieldDeal)
                 obj[key] = value
                 return obj
             },/** @type {Record<string, string>} */({}))
@@ -588,6 +595,7 @@ export default defineComponent({
                                             if(f.dataType === 'fixed'){
                                                 return <div class="sy-grid__field-value-text">{innerDataValue.value[f.key]}</div>
                                             }else{
+                                                // FIXME: 三角形挡住了导致点击不能下拉
                                                 const caret = <div class="sy-grid__field-input--caret"></div>
                                                 const selectMenu = 
                                                         <SySelectMenu active={attachDatas.value[f.key]?.isFocus ?? false}

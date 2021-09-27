@@ -52,6 +52,9 @@ const mainFieldList = ref([
             refreshStrategy: 'drop',
         }
     },
+    {key: 'submitDataPreHandler', label: '提交前处理', 
+        submitDataPreHandler: (v : string) => v.length === 0 ? null : v
+    },
     {key: 'end', label: '最后一个框'},
 ])
 
@@ -88,7 +91,7 @@ async function validate(){
 }
 function submit(){
     const data = mainGrid.value.getSubmitData()
-    console.log(data)
+    console.log(JSON.stringify(data))
 }
 // import { isJavaClass } from '../lib/utils/sy-util/validate'
 // window.isJavaClass = isJavaClass
