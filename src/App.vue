@@ -4,6 +4,40 @@ import { SyGrid, SyTable, Rule, SyCompUtils } from '../lib/main'
 
 import { ref } from 'vue'
 
+async function webRequest(){
+    return Promise.resolve(["异步1", "异步2"])
+}
+
+/**
+ * 下拉列表的说明
+ */
+function selectListGenerator(type : number){
+    switch(type) {
+        case 1:
+            // 如果希望只是一些固定值，那么可以直接
+            return () => ["你", "我", "他"]
+        case 2:
+            // 如果希望是每次下拉都异步加载
+            return async () => await webRequest()
+        case 3:
+            // 如果希望第一次下拉是异步然后缓存
+            // eslint-disable-next-line no-case-declarations
+            let cache : Array<string>
+            return async () => {
+                return cache ??= await webRequest()
+            }
+        case 4:
+            // 如果希望立即异步加载，后面每次下拉都读缓存
+            // eslint-disable-next-line no-case-declarations
+            // let cache2 = await webRequest()
+            // return () => cache2
+            // 或
+            // eslint-disable-next-line no-case-declarations
+            let cache2 : {value ?: Array<string>} = {}
+            webRequest().then(v => cache2.value = v)
+            return () => cache2.value
+    }
+}
 
 const mainFieldList = ref([
     {key: 'name', label: '姓名'},
@@ -12,6 +46,12 @@ const mainFieldList = ref([
     {key: 'javaClass', label: 'java类名校验', validRule: Rule.javaClassOptional()},
     {key: 'textarea', label: '文本域', dataType: 'textarea'},
     {key: 'jsonObject', label: 'jsonObject', dataType: 'jsonObject'},
+    {key: 'select', label: '下拉值', dataType: 'select',
+        selectOption: {
+            selectList: selectListGenerator(3),
+            refreshStrategy: 'drop',
+        }
+    },
     {key: 'end', label: '最后一个框'},
 ])
 
