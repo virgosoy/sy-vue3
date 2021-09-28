@@ -4,10 +4,14 @@ import { SyGrid, SyTable, Rule, SyCompUtils } from '../lib/main'
 
 import { ref } from 'vue'
 
+/**
+ * 模拟网络请求
+ */
 async function webRequest(){
     return Promise.resolve(["异步1", "异步2"])
 }
 
+//#region SyGrid & SyTable
 /**
  * 下拉列表的说明
  */
@@ -96,6 +100,25 @@ function submit(){
     const data = mainGrid.value.getSubmitData()
     console.log(JSON.stringify(data))
 }
+//#endregion
+
+//#region SyDialog
+
+import SyDialogUtil from '../lib/components/SyDialogUtil'
+
+function syDialogShow(){
+    SyDialogUtil.show(`你好`)
+            .then((e) => console.log(e))
+            .catch((e) => console.error(e))
+}
+function syDialogPrompt(){
+    SyDialogUtil.prompt(`你好`, '我好')
+            .then((e) => console.log(e))
+            .catch((e) => console.error(e))
+}
+
+//#endregion
+
 // import { isJavaClass } from '../lib/utils/sy-util/validate'
 // window.isJavaClass = isJavaClass
 </script>
@@ -115,6 +138,8 @@ function submit(){
             <button>删除</button>
         </template>
     </SyTable>
+    <button @click="syDialogShow">显示 SyDialog</button>
+    <button @click="syDialogPrompt">SyDialog Prompt</button>
 </template>
 
 <style>
