@@ -2,9 +2,11 @@
 // @ts-check
 
 /**
- * @version 1.17.0.210927   feat: 字段属性 `props.fieldList[].submitDataPreHandler` 获取提交数据前对值进行处理的函数，为 @beta 版本。
- *                          字段属性 `props.fieldList[].isSubmitNullWhenEmpty` 当值为空时是否提交null值
+ * @version 1.18.0.211016   refactor: 类型移动到 ../utils/define-utils.ts
+ *                          feat: define-utils.ts 增加 defindSyGridFieldList 方便 fieldList 属性构建时有代码提示
  * @changlog
+ *          1.18.0.211016   refactor: 类型移动到 ../utils/define-utils.ts
+ *                          feat: define-utils.ts 增加 defindSyGridFieldList 方便 fieldList 属性构建时有代码提示
  *          1.17.0.210927   feat: 字段属性 `props.fieldList[].submitDataPreHandler` 获取提交数据前对值进行处理的函数，为 @beta 版本。
  *                          字段属性 `props.fieldList[].isSubmitNullWhenEmpty` 当值为空时是否提交null值
  *          1.16.1.210917   fix: jsonObject 类型不输入时会报错。现在不输入会返回 null。
@@ -90,56 +92,11 @@ export default defineComponent({
     name: 'SyGrid',
     props:{
         /**
-         * @typedef {Object} PropOfSelectDialog 选择对话框相关设置
-         * @property {Array<any> | (() => Array<any> | Promise<Array<any>>)} dataList 数据列表
-         * @property {(item : any) => void} onSubmit 提交回调函数
-         * @property {(item : any) => string} template 模板dom
-         */
-        /** @typedef {() => Promise<Array<string>> | Array<string>} SelectListGenerator 下拉列表数据异步函数类型 */
-        /**
-         * @typedef {Object} PropOfSelect 选择下拉框相关设置
-         * @property {SelectListGenerator} selectList 下拉列表数据异步函数
-         * @property {'watchEffect' | 'drop' | 'once'} refreshStrategy 刷新策略（此对象中必须，就是说如果配置了此对象，那么需要有这个值）
-         *      - watchEffect 默认，使用 vue 的 watchEffect 触发
-         *      - drop 下拉时触发
-         *      - once 只触发一次，在加载时触发
-         * @property {boolean} enableFilter 开启过滤（根据输入的值进行过滤），用的是 SySelectMenu 的功能，默认 false
-         */
-        /**
-         * @typedef {Object} FieldProp 字段属性
-         * @property {string} key 字段
-         * @property {string} label 字段显示名
-         * @property {'text' | 'fixed' | 'select' | 'selectDialog' | 'date' | 'pick' | 'textarea' | 'jsonObject'} dataType 数据类型
-         *      - text 字符串
-         *      - fixed 只读固定
-         *      - select 下拉选择
-         *      - selectDialog 选择对话框（即SySelectDialog）
-         *      - date 日期
-         *      - pick 通过外部选择来修改值，值不可直接通过键盘输入，需通过事件（onClick）来进行修改。
-         *      - textarea 多行文本框
-         *      - jsonObject json对象。输入框为多行文本框；获取提交数据为json对象，不输入会返回null；内部保存的还是字符串。
-         * @property {function} validRule 校验规则，自动封装字段后传入 AsyncValidator
-         * @property {boolean} isShow 是否显示数据
-         * @property {boolean} isSend 是否发送数据给后端
-         * @property {boolean} isRequired 是否必填（样式显示，不做校验）
-         * @property {SelectListGenerator} selectList 下拉列表数据异步函数。建议使用 selectOption.selectList 代替。
-         * @property {?PropOfSelect} selectOption 下拉列表配置，可选
-         * @property {(e : Event, {key} : {key :string}) => void} onClick dataType==='pick' 时有效，表示点击输入框时的事件处理
-         * @property {PropOfSelectDialog} selectDialog 选择对话框相关设置
-         * @property {boolean} isFullRow 可选，是否占据整行，默认值：false，如果 dataType==='textarea'，则默认为true
-         * @property {boolean} isSubmitNullWhenEmpty 可选，当值为空时是否提交null值，而非空字符串。默认为false，空字符串。
-         *      此选项对 dataType === 'jsonObject' 无效，因为这个类型默认空就是返回 null
-         *      isSubmitNullWhenEmpty 为 true 并且值为空时，submitDataPreHandler 不生效
-         * @property {(value : any) => any} submitDataPreHandler @beta可选，获取提交数据前对值进行处理的函数，参数 value 为原值，返回值为新值。默认不处理
-         *      isSubmitNullWhenEmpty 为 true 并且值为空时，submitDataPreHandler 不生效
-         * @property {string} _inputType 内置，input 的 type 值
-         */
-        /**
          * 字段列表与属性\
          * 并不需要数据中所有的字段都配置上
          */
         fieldList:{
-            type: /** @type {import('vue').PropType<FieldProp[]>} */(Array),
+            type: /** @type {import('vue').PropType<import('../utils/define-utils').FieldProp[]>} */(Array),
             required: true,
         },
         /**
@@ -198,9 +155,10 @@ export default defineComponent({
          */
         const realFieldList = computed(() => {
             return fieldList.value.map(item => {
+                /** @type {import('../utils/define-utils').FieldProp} */
                 const result = Object.assign({}, 
                         /* 默认值 */
-                        /** @type {FieldProp} */
+                        /** @type {import('../utils/define-utils').FieldProp} */
                         ({
                             dataType: 'text', 
                             isShow: true, 
@@ -376,7 +334,7 @@ export default defineComponent({
         /**
          * 获取提交数据前的钩子列表，直接 push 钩子即可\
          * 钩子参数：value - 原值, fieldProp - 字段属性；返回值：新值。
-         * @type {Array<(value: any, fieldProp: FieldProp) => any>}
+         * @type {Array<(value: any, fieldProp: import('../utils/define-utils').FieldProp) => any>}
          */
         const getSubmitDataPreHooks = []
 

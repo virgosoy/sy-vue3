@@ -65,13 +65,19 @@ const mainFieldList = ref([
     {key: 'end', label: '最后一个框'},
 ])
 
+// 还是叫 mainData ?
 const mainValue = ref({
 })
 
+// 还是叫 firstTableFieldList ?
+// 还是教 firstFieldList
 const firstLineFieldList = ref([
     {key: 'score', label: '分数'}
 ])
 
+// 还是叫 firstLineDataList ?
+// 还是叫 firstTableValueList ?
+// 还是叫 firstValueList ?
 const firstLineValueList = ref([
 ])
 
@@ -102,6 +108,18 @@ function submit(){
 }
 //#endregion
 
+//#region SyGrid's defind
+import { defindSyGridFieldList } from '../lib/main'
+
+const defineFieldList = ref(defindSyGridFieldList([
+    {key: 'name', label: '姓名'},
+    {key: 'age', label: '年龄'}
+]))
+
+const defineValue = ref({})
+
+//#endregion SyGrid's defind
+
 //#region SyDialog
 
 import SyDialogUtil from '../lib/components/SyDialogUtil'
@@ -125,6 +143,7 @@ function syDialogPrompt(){
 
 <template>
     <SyGrid ref="mainGrid" :fieldList="mainFieldList" v-model:dataValue="mainValue" ></SyGrid>
+    <SyGrid ref="mainGrid" :fieldList="defineFieldList" v-model:dataValue="defineValue" ></SyGrid>
     <button @click="validate">校验SyGrid</button>
     <button @click="submit">提交SyGrid</button>
     <SyTable :columnPropList="firstLineFieldList" v-model:tableDataList="firstLineValueList"></SyTable>
