@@ -11,7 +11,7 @@
 /**
  * 选择对话框相关设置
  */
-export type PropOfSelectDialog = {
+type PropOfSelectDialog = {
     /**
      * 数据列表
      */
@@ -29,12 +29,12 @@ export type PropOfSelectDialog = {
 /**
  * 下拉列表数据异步函数类型
  */
-export type SelectListGenerator = () => Promise<Array<string>> | Array<string>
+type SelectListGenerator = () => Promise<Array<string>> | Array<string>
 
 /**
  * 选择下拉框相关设置
  */
-export type PropOfSelect = {
+type PropOfSelect = {
     /**
      * 下拉列表数据异步函数
      */
@@ -150,3 +150,118 @@ export function defindSyGridFieldList
 }
 
 //#endregion SyGrid
+
+//#region SyTable
+
+/**
+ * 数据行对象
+ */
+export type TableRow = Object & InnerTableRow
+
+/**
+ * 内置表格行对象
+ */
+ export type InnerTableRow = {
+    /** 内置id */
+    _syRowId: number
+}
+
+/**
+ * 千分位文本输入框配置项
+ */
+type CurrencyOption = {
+    /** 精度，默认为无限 */
+    digit?: number
+}
+
+/**
+ * 列属性
+ */
+export type ColumnProp<K extends string = string> = {
+    /** 表格数据的key */
+    key: K
+    /** 显示名 */
+    label: string
+    /**
+     * 数据类型，默认text，有 
+     *          - text  普通文本（目前没特殊用途）
+     *          - fixed   只读不可变，一般是后端传递过来
+     *          - percent   百分比文本输入框（注意：显示值与真实值不同）
+     *          - currency  千分位文本输入框（注意：显示值与真实值不同）
+     */
+    dataType?: 'text' | 'fixed' | 'percent' | 'currency'
+    /** 可选，当 dataType==='currecy' 时有效，千分位文本输入框配置项 */
+    currencyOption?: CurrencyOption
+    /** 表格css宽度 */
+    width?: string
+    /** 是否前端表格显示，默认 true */
+    isShow?: boolean
+    /** 是否发送给后端，默认 true */
+    isSend?: boolean
+    /** 可选，校验规则函数 */
+    validRule?: Function
+    /** 可选，选择列表/选择列表生成器，如果有此参数则会提供下拉列表，否则不会提供 */
+    selectList?: ((row: TableRow) => Promise<string[]>) | string[]
+    /** 可选，新行默认值生成器，回调函数返回值将作为新行创建时的默认值。无配置则不处理。 */
+    defaultValue: () => any
+} & InnerColumnProp
+
+/**
+ * 内置属性
+ */
+type InnerColumnProp = {
+    /** 内置属性，只读 */
+    _readonly: boolean
+}
+
+/**
+ * 定义 SyTable 组件的 columnPropList 参数值
+ * @param options
+ * @param typeInstance 可选，类型实例，用于约束key的值
+ */
+export function defindSyTableFieldList<E = any>
+        (options : Array<Omit<ColumnProp<keyof E & string>, keyof InnerColumnProp>>, typeInstance ?: E){
+    return options as Array<ColumnProp<keyof E & string>>
+}
+
+/**
+ * 设置，全部值均为可选
+ */
+export type SyTableSetting<K extends string = string> = {
+    /** 操作列宽度，css字符串 */
+    opWidth?: string
+    /** 序号列宽度，css字符串 */
+    orderWidth?: string
+    /** 最小行数（含）。删除/获取提交数据不控制，仅校验时使用 */
+    minRowCount?: number
+    /** 最大行数（含），-1 为无限）。删除/获取提交数据不控制；新增行会控制，校验时使用 */
+    maxRowCount?: number
+    /** 排序key名，无配置表示没有排序 */
+    orderKey?: K
+    /** 只读行处理器，传入一个回调函数，返回该行是否只读。无配置表示都不只读。 */
+    readonlyRowHandler?: ({rowData, rowIndexOfShow} : {rowData : TableRow, rowIndexOfShow : number})=>boolean
+    /** 不可删除行处理器，传入一个回调函数，返回该行是否可删。无配置表示都可删。 */
+    deleteRowHandler?: ({rowData, rowIndexOfShow} : {rowData : TableRow, rowIndexOfShow : number})=>boolean
+    /** 是否可增加行 */
+    canAddRow?: boolean
+    /** 是否可删除行 */
+    canRemoveRow?: boolean
+    /**
+     * 是否可任意位置增加行（侧边的+号）
+     *      会受 `canAddRow = false` 影响，即前提为 `canAddRow = true` 配置才有效
+     */
+    canAddRowOfAnyWhere?: boolean
+    /** 是否为只读模式 */
+    isReadMode?: boolean
+}
+
+/**
+ * 定义 SyTable 组件的 setting 参数值
+ * @param options 
+ * @returns 
+ */
+export function defindSyTableSetting(options : SyTableSetting){
+    return options
+}
+
+//#endregion SyTable

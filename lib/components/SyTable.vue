@@ -2,8 +2,11 @@
 // @ts-check
 
 /**
- * @version 1.5.1.210922    fix: 粘贴新增行失效（this变成undefined，猜测可能是升级vue之后不支持了）
+ * @version 1.6.0.211018    refactor: 类型移动到 ../utils/define-utils.ts
+ *                          feat: define-utils.ts 增加 defindSyTableXxx 方便属性构建时有代码提示
  * @changelog
+ *          1.6.0.211018    refactor: 类型移动到 ../utils/define-utils.ts
+ *                          feat: define-utils.ts 增加 defindSyTableXxx 方便属性构建时有代码提示
  *          1.5.1.210922    fix: 粘贴新增行失效（this变成undefined，猜测可能是升级vue之后不支持了）
  *          1.5.0.210909    feat:新增插槽`operation`，对操作列进行修改
  *          1.4.1.210908    路径含有`@`的改为相对路径
@@ -177,39 +180,17 @@ export default defineComponent({
     name: 'SyTable',
     props: {
         /**
-         * @typedef {Object} CurrencyOption 千分位文本输入框配置项
-         * @property {number} digit 精度，默认为无限
-         */
-        /**
          * 默认值见 realColumnPropList
-         * @typedef {Object} ColumnProp 列属性
-         * @property {string} key 表格数据的key
-         * @property {string} label 显示名
-         * @property {'text' | 'fixed' | 'percent'} dataType 数据类型，有 
-         *          - text  普通文本（目前没特殊用途）
-         *          - fixed   只读不可变，一般是后端传递过来
-         *          - percent   百分比文本输入框（注意：显示值与真实值不同）
-         *          - currency  千分位文本输入框（注意：显示值与真实值不同）
-         * @property {CurrencyOption} currencyOption 可选，当 dataType==='currecy' 时有效，千分位文本输入框配置项
-         * @property {string} width 表格css宽度 
-         * @property {boolean} isShow 是否前端表格显示
-         * @property {boolean} isSend 是否发送给后端
-         * @property {Function} validRule 校验规则函数
-         * @property {((row: TableRow) => Promise<string[]>) | string[]} selectList 选择列表/选择列表生成器，如果有此参数则会提供下拉列表，否则不会提供
-         * @property {() => any} defaultValue 可选，新行默认值生成器，回调函数返回值将作为新行创建时的默认值。无配置则不处理。
-         * 
-         * @property {boolean} _readonly 内置属性，只读
          */
         columnPropList: {
-            type: /** @type {import('vue').PropType<ColumnProp[]>} */ (Array), // 引用类型传入，会影响父组件传入的属性
+            type: /** @type {import('vue').PropType<import('../utils/define-utils').ColumnProp[]>} */ (Array), // 引用类型传入，会影响父组件传入的属性
             required: true
         },
         /**
-         * @typedef {Object} InnerTableRow 内置表格行对象
-         * @property {number} _syRowId 内置id
+         * @typedef {import('../utils/define-utils').InnerTableRow} InnerTableRow 内置表格行对象
          */
         /**
-         * @typedef {InnerTableRow} TableRow 数据行对象
+         * @typedef {import('../utils/define-utils').TableRow} TableRow 数据行对象
          */
         /**
          * 表格数据
@@ -220,22 +201,9 @@ export default defineComponent({
         },
         /**
          * 初始默认值见 innerSetting
-         * @typedef {Object} Setting 设置
-         * @property {string} opWidth 操作列宽度
-         * @property {string} orderWidth 序号列宽度
-         * @property {number} minRowCount 最小行数（含）。删除/获取提交数据不控制，仅校验时使用
-         * @property {number} maxRowCount 最大行数（含），-1 为无限）。删除/获取提交数据不控制；新增行会控制，校验时使用
-         * @property {string} orderKey 排序key名，无配置表示没有排序
-         * @property {({rowData, rowIndexOfShow} : {rowData : TableRow, rowIndexOfShow : number})=>boolean} readonlyRowHandler 只读行处理器，传入一个回调函数，返回该行是否只读。无配置表示都不只读。
-         * @property {({rowData, rowIndexOfShow} : {rowData : TableRow, rowIndexOfShow : number})=>boolean} deleteRowHandler 不可删除行处理器，传入一个回调函数，返回该行是否可删。无配置表示都可删。
-         * @property {boolean} canAddRow 是否可增加行
-         * @property {boolean} canRemoveRow 是否可删除行
-         * @property {boolean} canAddRowOfAnyWhere 是否可任意位置增加行（侧边的+号）
-         *      会受 `canAddRow = false` 影响，即前提为 `canAddRow = true` 配置才有效
-         * @property {boolean} isReadMode 是否为只读模式
          */
         setting: {
-            type: /** @type {import('vue').PropType<Setting>} */(Object), // 引用类型传入，会影响父组件传入的属性
+            type: /** @type {import('vue').PropType<import('../utils/define-utils').SyTableSetting>} */(Object), // 引用类型传入，会影响父组件传入的属性
             required: false,
             default: () => ({})
         },
@@ -297,7 +265,7 @@ export default defineComponent({
          * 此属性不会双向绑定回去，因为 Object.assign({},...)
          */
          const innerSetting = computed(()=>{
-            const result = Object.assign({},/** @type {Setting} */({
+            const result = Object.assign({},/** @type {import('../utils/define-utils').SyTableSetting} */({
                 opWidth: '100px', 
                 orderWidth: '40px', 
                 minRowCount: 0,
@@ -335,7 +303,7 @@ export default defineComponent({
             return props.columnPropList.map(item => {
                 const result = Object.assign({}, 
                         // 默认值
-                        /** @type {ColumnProp}*/
+                        /** @type {import('../utils/define-utils').ColumnProp}*/
                         ({
                             width: '150px', 
                             dataType: 'text', 
