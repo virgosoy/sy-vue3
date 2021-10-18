@@ -1,3 +1,12 @@
+## 0.1.14-alpha.211018 (2021-10-18)
+
+### Features
+
+增加 `defineXxx` 方法（[define-utils.ts](lib\utils\define-utils.ts)）方便创建参数给 `SyGrid` 和 `SyTable` 使用。
+因为类型重构，故相关组件进行兼容性升级：
+- `SyGrid` v1.18.0.211016 
+- `SyTable` v1.6.0.211018
+
 ## 0.1.13-alpha.210927 (2021-09-27)
 
 ### Features
