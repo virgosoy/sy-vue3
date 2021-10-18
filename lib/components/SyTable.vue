@@ -180,18 +180,21 @@ export default defineComponent({
     name: 'SyTable',
     props: {
         /**
+         * @typedef {import('../utils/define-utils').SyTableFieldProp} ColumnProp
+         */
+        /**
+         * @typedef {import('../utils/define-utils').SyTableInnerRow} InnerTableRow 内置表格行对象
+         */
+        /**
+         * @typedef {import('../utils/define-utils').SyTableRow} TableRow 数据行对象
+         */
+        /**
          * 默认值见 realColumnPropList
          */
         columnPropList: {
-            type: /** @type {import('vue').PropType<import('../utils/define-utils').ColumnProp[]>} */ (Array), // 引用类型传入，会影响父组件传入的属性
+            type: /** @type {import('vue').PropType<ColumnProp[]>} */ (Array), // 引用类型传入，会影响父组件传入的属性
             required: true
         },
-        /**
-         * @typedef {import('../utils/define-utils').InnerTableRow} InnerTableRow 内置表格行对象
-         */
-        /**
-         * @typedef {import('../utils/define-utils').TableRow} TableRow 数据行对象
-         */
         /**
          * 表格数据
          */
@@ -303,7 +306,7 @@ export default defineComponent({
             return props.columnPropList.map(item => {
                 const result = Object.assign({}, 
                         // 默认值
-                        /** @type {import('../utils/define-utils').ColumnProp}*/
+                        /** @type {ColumnProp}*/
                         ({
                             width: '150px', 
                             dataType: 'text', 

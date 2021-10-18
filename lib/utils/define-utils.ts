@@ -55,7 +55,7 @@ type PropOfSelect = {
 /**
  * 字段属性
  */
-export type FieldProp<K extends string = string> = {
+export type SyGridFieldProp<K extends string = string> = {
     /**
      * 字段
      */
@@ -123,12 +123,12 @@ export type FieldProp<K extends string = string> = {
      *      isSubmitNullWhenEmpty 为 true 并且值为空时，submitDataPreHandler 不生效
      */
     submitDataPreHandler ?: (value : any) => any
-} & InnerFieldProp
+} & SyGridInnerFieldProp
 
 /**
  * 内置属性
  */
-type InnerFieldProp = {
+type SyGridInnerFieldProp = {
     /**
      * 内置，input 的 type 值
      */
@@ -141,12 +141,12 @@ type InnerFieldProp = {
  * @param typeInstance 可选，类型实例，用于规定key的范围
  * @returns 
  */
-// export function defineSyGridFieldList(options : Array<Omit<FieldProp, keyof InnerFieldProp>>) : Array<FieldProp>
-// export function defineSyGridFieldList<E>(options : Array<Omit<FieldProp, keyof InnerFieldProp>>, typeInstance : E) : Array<FieldProp<E>>
+// export function defineSyGridFieldList(options : Array<Omit<SyGridFieldProp, keyof InnerFieldProp>>) : Array<SyGridFieldProp>
+// export function defineSyGridFieldList<E>(options : Array<Omit<SyGridFieldProp, keyof InnerFieldProp>>, typeInstance : E) : Array<SyGridFieldProp<E>>
 export function defineSyGridFieldList
         <E extends Record<string, any> = Record<string, any>>
-        (options : Array<Omit<FieldProp<keyof E & string>, keyof InnerFieldProp>>, typeInstance ?: E){
-    return options as Array<FieldProp<keyof E & string>>
+        (options : Array<Omit<SyGridFieldProp<keyof E & string>, keyof SyGridInnerFieldProp>>, typeInstance ?: E){
+    return options as Array<SyGridFieldProp<keyof E & string>>
 }
 
 /**
@@ -175,12 +175,12 @@ export function defineSyGridSetting(options : SyGridSetting){
 /**
  * 数据行对象
  */
-export type TableRow = Object & InnerTableRow
+export type SyTableRow = Object & SyTableInnerRow
 
 /**
  * 内置表格行对象
  */
- export type InnerTableRow = {
+export type SyTableInnerRow = {
     /** 内置id */
     _syRowId: number
 }
@@ -196,7 +196,7 @@ type CurrencyOption = {
 /**
  * 列属性
  */
-export type ColumnProp<K extends string = string> = {
+export type SyTableFieldProp<K extends string = string> = {
     /** 表格数据的key */
     key: K
     /** 显示名 */
@@ -220,15 +220,15 @@ export type ColumnProp<K extends string = string> = {
     /** 可选，校验规则函数 */
     validRule?: Function
     /** 可选，选择列表/选择列表生成器，如果有此参数则会提供下拉列表，否则不会提供 */
-    selectList?: ((row: TableRow) => Promise<string[]>) | string[]
+    selectList?: ((row: SyTableRow) => Promise<string[]>) | string[]
     /** 可选，新行默认值生成器，回调函数返回值将作为新行创建时的默认值。无配置则不处理。 */
     defaultValue?: () => any
-} & InnerColumnProp
+} & SyTableInnerFieldProp
 
 /**
  * 内置属性
  */
-type InnerColumnProp = {
+type SyTableInnerFieldProp = {
     /** 内置属性，只读 */
     _readonly: boolean
 }
@@ -239,8 +239,8 @@ type InnerColumnProp = {
  * @param typeInstance 可选，类型实例，用于约束key的值
  */
 export function defineSyTableFieldList<E = any>
-        (options : Array<Omit<ColumnProp<keyof E & string>, keyof InnerColumnProp>>, typeInstance ?: E){
-    return options as Array<ColumnProp<keyof E & string>>
+        (options : Array<Omit<SyTableFieldProp<keyof E & string>, keyof SyTableInnerFieldProp>>, typeInstance ?: E){
+    return options as Array<SyTableFieldProp<keyof E & string>>
 }
 
 /**
@@ -258,9 +258,9 @@ export type SyTableSetting<K extends string = string> = {
     /** 排序key名，无配置表示没有排序 */
     orderKey?: K
     /** 只读行处理器，传入一个回调函数，返回该行是否只读。无配置表示都不只读。 */
-    readonlyRowHandler?: ({rowData, rowIndexOfShow} : {rowData : TableRow, rowIndexOfShow : number})=>boolean
+    readonlyRowHandler?: ({rowData, rowIndexOfShow} : {rowData : SyTableRow, rowIndexOfShow : number})=>boolean
     /** 不可删除行处理器，传入一个回调函数，返回该行是否可删。无配置表示都可删。 */
-    deleteRowHandler?: ({rowData, rowIndexOfShow} : {rowData : TableRow, rowIndexOfShow : number})=>boolean
+    deleteRowHandler?: ({rowData, rowIndexOfShow} : {rowData : SyTableRow, rowIndexOfShow : number})=>boolean
     /** 是否可增加行 */
     canAddRow?: boolean
     /** 是否可删除行 */

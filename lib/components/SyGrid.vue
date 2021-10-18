@@ -92,11 +92,14 @@ export default defineComponent({
     name: 'SyGrid',
     props:{
         /**
+         * @typedef {import('../utils/define-utils').SyGridFieldProp} FieldProp
+         */
+        /**
          * 字段列表与属性\
          * 并不需要数据中所有的字段都配置上
          */
         fieldList:{
-            type: /** @type {import('vue').PropType<import('../utils/define-utils').FieldProp[]>} */(Array),
+            type: /** @type {import('vue').PropType<FieldProp[]>} */(Array),
             required: true,
         },
         /**
@@ -152,10 +155,10 @@ export default defineComponent({
          */
         const realFieldList = computed(() => {
             return fieldList.value.map(item => {
-                /** @type {import('../utils/define-utils').FieldProp} */
+                /** @type {FieldProp} */
                 const result = Object.assign({}, 
                         /* 默认值 */
-                        /** @type {import('../utils/define-utils').FieldProp} */
+                        /** @type {FieldProp} */
                         ({
                             dataType: 'text', 
                             isShow: true, 
@@ -331,7 +334,7 @@ export default defineComponent({
         /**
          * 获取提交数据前的钩子列表，直接 push 钩子即可\
          * 钩子参数：value - 原值, fieldProp - 字段属性；返回值：新值。
-         * @type {Array<(value: any, fieldProp: import('../utils/define-utils').FieldProp) => any>}
+         * @type {Array<(value: any, fieldProp: FieldProp) => any>}
          */
         const getSubmitDataPreHooks = []
 
