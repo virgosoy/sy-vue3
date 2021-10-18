@@ -116,6 +116,25 @@ const defineFieldList = ref(defindSyGridFieldList([
     {key: 'age', label: '年龄'}
 ]))
 
+type MyDTO = {
+    a : string;
+    b : string;
+}
+
+// 带元素类型的 jsdoc 用法（ts不适合）
+const defineFieldList2 = ref(defindSyGridFieldList([
+    // @ts-ignore
+    {key: 'a', label: '姓名'},
+    // @ts-ignore
+    {key: 'b', label: '年龄'},
+], /** @type {MyDTO}*/ ({})))
+
+// 带元素类型的 ts 用法
+const defineFieldList3 = ref(defindSyGridFieldList<MyDTO>([
+    {key: 'a', label: '姓名'},
+    {key: 'b', label: '年龄'},
+]))
+
 const defineValue = ref({})
 
 //#endregion SyGrid's defind
