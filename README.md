@@ -14,6 +14,7 @@ Since TypeScript cannot handle type information for `.vue` imports, they are shi
 
 - [ ] eslint support ts
 - [ ] refactor valid-rule.js similar code
+- [ ] SyGrid 和 SyTable 组件支持tip
 
 # How to Start
 
