@@ -3,10 +3,10 @@
 
 /**
  * @version 1.6.0.211018    refactor: 类型移动到 ../utils/define-utils.ts
- *                          feat: define-utils.ts 增加 defindSyTableXxx 方便属性构建时有代码提示
+ *                          feat: define-utils.ts 增加 defineSyTableXxx 方便属性构建时有代码提示
  * @changelog
  *          1.6.0.211018    refactor: 类型移动到 ../utils/define-utils.ts
- *                          feat: define-utils.ts 增加 defindSyTableXxx 方便属性构建时有代码提示
+ *                          feat: define-utils.ts 增加 defineSyTableXxx 方便属性构建时有代码提示
  *          1.5.1.210922    fix: 粘贴新增行失效（this变成undefined，猜测可能是升级vue之后不支持了）
  *          1.5.0.210909    feat:新增插槽`operation`，对操作列进行修改
  *          1.4.1.210908    路径含有`@`的改为相对路径

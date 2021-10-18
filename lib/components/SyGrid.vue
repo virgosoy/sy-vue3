@@ -3,10 +3,10 @@
 
 /**
  * @version 1.18.0.211016   refactor: 类型移动到 ../utils/define-utils.ts
- *                          feat: define-utils.ts 增加 defindSyGridFieldList 方便 fieldList 属性构建时有代码提示
+ *                          feat: define-utils.ts 增加 defineSyGridXxx 方便属性构建时有代码提示
  * @changlog
  *          1.18.0.211016   refactor: 类型移动到 ../utils/define-utils.ts
- *                          feat: define-utils.ts 增加 defindSyGridFieldList 方便 fieldList 属性构建时有代码提示
+ *                          feat: define-utils.ts 增加 defineSyGridXxx 方便属性构建时有代码提示
  *          1.17.0.210927   feat: 字段属性 `props.fieldList[].submitDataPreHandler` 获取提交数据前对值进行处理的函数，为 @beta 版本。
  *                          字段属性 `props.fieldList[].isSubmitNullWhenEmpty` 当值为空时是否提交null值
  *          1.16.1.210917   fix: jsonObject 类型不输入时会报错。现在不输入会返回 null。

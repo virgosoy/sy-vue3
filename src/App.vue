@@ -108,10 +108,10 @@ function submit(){
 }
 //#endregion
 
-//#region SyGrid's defind
-import { defindSyGridFieldList } from '../lib/main'
+//#region SyGrid & SyTable's defind
+import { defineSyGridFieldList, defineSyTableFieldList, defineSyTableSetting } from '../lib/main'
 
-const defineFieldList = ref(defindSyGridFieldList([
+const defineFieldList = ref(defineSyGridFieldList([
     {key: 'name', label: '姓名'},
     {key: 'age', label: '年龄'}
 ]))
@@ -122,7 +122,7 @@ type MyDTO = {
 }
 
 // 带元素类型的 jsdoc 用法（ts不适合）
-const defineFieldList2 = ref(defindSyGridFieldList([
+const defineFieldList2 = ref(defineSyGridFieldList([
     // @ts-ignore
     {key: 'a', label: '姓名'},
     // @ts-ignore
@@ -130,14 +130,23 @@ const defineFieldList2 = ref(defindSyGridFieldList([
 ], /** @type {MyDTO}*/ ({})))
 
 // 带元素类型的 ts 用法
-const defineFieldList3 = ref(defindSyGridFieldList<MyDTO>([
+const defineFieldList3 = ref(defineSyGridFieldList<MyDTO>([
     {key: 'a', label: '姓名'},
     {key: 'b', label: '年龄'},
 ]))
 
+const defineTableFieldList = ref(defineSyTableFieldList<MyDTO>([
+    {key: 'a', label: '姓名'},
+    {key: 'b', label: '年龄'},
+]))
+
+const defineTableSetting = ref(defineSyTableSetting({
+    isReadMode: true
+}))
+
 const defineValue = ref({})
 
-//#endregion SyGrid's defind
+//#endregion SyGrid & SyTable's defind
 
 //#region SyDialog
 

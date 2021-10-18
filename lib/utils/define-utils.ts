@@ -141,9 +141,9 @@ type InnerFieldProp = {
  * @param typeInstance 可选，类型实例，用于规定key的范围
  * @returns 
  */
-// export function defindSyGridFieldList(options : Array<Omit<FieldProp, keyof InnerFieldProp>>) : Array<FieldProp>
-// export function defindSyGridFieldList<E>(options : Array<Omit<FieldProp, keyof InnerFieldProp>>, typeInstance : E) : Array<FieldProp<E>>
-export function defindSyGridFieldList
+// export function defineSyGridFieldList(options : Array<Omit<FieldProp, keyof InnerFieldProp>>) : Array<FieldProp>
+// export function defineSyGridFieldList<E>(options : Array<Omit<FieldProp, keyof InnerFieldProp>>, typeInstance : E) : Array<FieldProp<E>>
+export function defineSyGridFieldList
         <E extends Record<string, any> = Record<string, any>>
         (options : Array<Omit<FieldProp<keyof E & string>, keyof InnerFieldProp>>, typeInstance ?: E){
     return options as Array<FieldProp<keyof E & string>>
@@ -203,7 +203,7 @@ export type ColumnProp<K extends string = string> = {
     /** 可选，选择列表/选择列表生成器，如果有此参数则会提供下拉列表，否则不会提供 */
     selectList?: ((row: TableRow) => Promise<string[]>) | string[]
     /** 可选，新行默认值生成器，回调函数返回值将作为新行创建时的默认值。无配置则不处理。 */
-    defaultValue: () => any
+    defaultValue?: () => any
 } & InnerColumnProp
 
 /**
@@ -219,7 +219,7 @@ type InnerColumnProp = {
  * @param options
  * @param typeInstance 可选，类型实例，用于约束key的值
  */
-export function defindSyTableFieldList<E = any>
+export function defineSyTableFieldList<E = any>
         (options : Array<Omit<ColumnProp<keyof E & string>, keyof InnerColumnProp>>, typeInstance ?: E){
     return options as Array<ColumnProp<keyof E & string>>
 }
@@ -260,7 +260,7 @@ export type SyTableSetting<K extends string = string> = {
  * @param options 
  * @returns 
  */
-export function defindSyTableSetting(options : SyTableSetting){
+export function defineSyTableSetting(options : SyTableSetting){
     return options
 }
 
