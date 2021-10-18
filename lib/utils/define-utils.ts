@@ -55,11 +55,11 @@ export type PropOfSelect = {
 /**
  * 字段属性
  */
-export type FieldProp<E = any> = {
+export type FieldProp<K extends string = string> = {
     /**
      * 字段
      */
-    key : keyof E & string
+    key : K
     /**
      * 字段显示名
      */
@@ -143,8 +143,10 @@ type InnerFieldProp = {
  */
 // export function defindSyGridFieldList(options : Array<Omit<FieldProp, keyof InnerFieldProp>>) : Array<FieldProp>
 // export function defindSyGridFieldList<E>(options : Array<Omit<FieldProp, keyof InnerFieldProp>>, typeInstance : E) : Array<FieldProp<E>>
-export function defindSyGridFieldList<E = any>(options : Array<Omit<FieldProp<E>, keyof InnerFieldProp>>, typeInstance ?: E){
-    return options as Array<FieldProp<E>>
+export function defindSyGridFieldList
+        <E extends Record<string, any> = Record<string, any>>
+        (options : Array<Omit<FieldProp<keyof E & string>, keyof InnerFieldProp>>, typeInstance ?: E){
+    return options as Array<FieldProp<keyof E & string>>
 }
 
 //#endregion SyGrid
