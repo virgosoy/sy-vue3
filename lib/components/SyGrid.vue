@@ -107,13 +107,10 @@ export default defineComponent({
             required: true,
         },
         /**
-         * 设置
-         * @typedef {Object} Setting 设置
-         * @property {boolean} isDefaultEmptyStringOfValue 是否默认空值为空字符串
-         * @property {boolean} isReadMode 是否为只读模式
+         * 设置，默认值见 realSetting 方法
          */
         setting: {
-            type: /** @type {import('vue').PropType<Setting>} */(Object),
+            type: /** @type {import('vue').PropType<import('../utils/define-utils').SyGridSetting>} */(Object),
             required: false,
         }
     },
@@ -139,7 +136,7 @@ export default defineComponent({
          const realSetting = computed(() => {
             const result = Object.assign({},
                     /* 默认值 */
-                    /** @type {Setting} */
+                    /** @type {import('../utils/define-utils').SyGridSetting} */
                     ({
                         isDefaultEmptyStringOfValue: true,
                         isReadMode: false,

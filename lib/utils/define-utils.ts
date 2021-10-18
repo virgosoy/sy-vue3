@@ -149,6 +149,25 @@ export function defineSyGridFieldList
     return options as Array<FieldProp<keyof E & string>>
 }
 
+/**
+ * 设置，值全为可选
+ */
+export type SyGridSetting = {
+    /** 是否默认空值为空字符串 */
+    isDefaultEmptyStringOfValue?: boolean
+    /** 是否为只读模式 */
+    isReadMode?: boolean
+}
+
+/**
+ * 定义 SyGrid 组件的 setting 参数值
+ * @param options 
+ * @returns 
+ */
+export function defineSyGridSetting(options : SyGridSetting){
+    return options
+}
+
 //#endregion SyGrid
 
 //#region SyTable
